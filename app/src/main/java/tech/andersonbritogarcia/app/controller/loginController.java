@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import tech.andersonbritogarcia.app.controller.dto.LoginRequest;
 import tech.andersonbritogarcia.app.controller.dto.LoginResponse;
+import tech.andersonbritogarcia.app.controller.exception.BusinessException;
 import tech.andersonbritogarcia.app.service.UserService;
 
 import java.time.Instant;
@@ -31,7 +32,7 @@ public class loginController {
 
     @PostMapping("/login")
     public LoginResponse login(@RequestBody @Valid LoginRequest request) {
-        var user = userService.findByUsername(request.username()).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        var user = userService.findByUsername(request.username()).orElseThrow(() -> new BadCredentialsException("User not found"));
 
         validatePassword(request.password(), user.getPassword());
         var now = Instant.now();
